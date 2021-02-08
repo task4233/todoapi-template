@@ -6,5 +6,5 @@ import (
 )
 
 type DB interface {
-    putTODO(ctx context.Context, t *todo.TODO) error
+    PutTODO(ctx context.Context, t *todo.TODO) error
 }
