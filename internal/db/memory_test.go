@@ -44,3 +44,45 @@ func TestMemoryDBPutTODO(t *testing.T) {
 		})
 	}
 }
+
+func TestMemoryDBGetAllTODOs(t *testing.T) {
+	t.Parallel()
+
+	todo1 := &todo.TODO{
+		ID:    "test",
+		Title: "testTitle",
+	}
+
+	cases := map[string]struct {
+		todo *todo.TODO
+		want []*todo.TODO
+	}{
+		"put": {
+			todo: todo1,
+			want: []*todo.TODO{todo1},
+		},
+	}
+
+	ctx := context.Background()
+	d := NewMemoryDB()
+	if err := d.PutTODO(ctx, todo1); err != nil {
+		t.Fatalf("failed to put a todo: %s", err.Error())
+	}
+
+	for name, tc := range cases {
+		test := tc
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			todos, err := d.GetAllTODOs(ctx)
+
+			if err != nil {
+				t.Fatalf("failed to get all todos: %s", err.Error())
+			}
+
+			if diff := cmp.Diff(test.want, todos); diff != "" {
+				t.Errorf("\n(-expected, +actual)\n%s", diff)
+			}
+		})
+	}
+}

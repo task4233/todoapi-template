@@ -55,9 +55,9 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">github.com/task4233/todoapi-template/internal/db/memory.go (30.8%)</option>
+				<option value="file0">github.com/task4233/todoapi-template/internal/db/memory.go (100.0%)</option>
 				
-				<option value="file1">github.com/task4233/todoapi-template/internal/todo/todo.go (87.5%)</option>
+				<option value="file1">github.com/task4233/todoapi-template/internal/todo/todo.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -96,25 +96,25 @@ type memoryDB struct {
         lock sync.RWMutex
 }
 
-func NewMemoryDB() DB <span class="cov0" title="0">{
+func NewMemoryDB() DB <span class="cov1" title="1">{
         return &amp;memoryDB{db: map[string]*todo.TODO{}}
 }</span>
 
-func (m *memoryDB) GetAllTODOs(ctx context.Context) ([]*todo.TODO, error) <span class="cov0" title="0">{
+func (m *memoryDB) GetAllTODOs(ctx context.Context) ([]*todo.TODO, error) <span class="cov1" title="1">{
         m.lock.Lock()
 
         result := make([]*todo.TODO, len(m.db))
         i := 0
-        for _, t := range m.db </span><span class="cov0" title="0">{
+        for _, t := range m.db </span><span class="cov1" title="1">{
                 result[i] = t
                 i++
         }</span>
 
-        <span class="cov0" title="0">m.lock.Unlock()
+        <span class="cov1" title="1">m.lock.Unlock()
         return result, nil</span>
 }
 
-func (m *memoryDB) PutTODO(ctx context.Context, t *todo.TODO) error <span class="cov8" title="1">{
+func (m *memoryDB) PutTODO(ctx context.Context, t *todo.TODO) error <span class="cov10" title="2">{
         m.lock.Lock()
         m.db[t.ID] = t
         m.lock.Unlock()
@@ -137,12 +137,12 @@ type TODO struct {
 }
 
 // NewTODO creates TODO with uuid.New()
-func NewTODO(title string) (*TODO, error) <span class="cov4" title="2">{
-        if len(title) == 0 </span><span class="cov0" title="0">{
+func NewTODO(title string) (*TODO, error) <span class="cov5" title="2">{
+        if len(title) == 0 </span><span class="cov1" title="1">{
                 return nil, errors.New("title must not be empty")
         }</span>
 
-        <span class="cov4" title="2">return &amp;TODO{
+        <span class="cov1" title="1">return &amp;TODO{
                 ID:    uuid.New().String(),
                 Title: title,
         }, nil</span>
@@ -150,16 +150,16 @@ func NewTODO(title string) (*TODO, error) <span class="cov4" title="2">{
 
 // IsValid checks if TODO is a valid
 // if valid, returns nil
-func (t TODO) IsValid() error <span class="cov10" title="5">{
+func (t TODO) IsValid() error <span class="cov10" title="4">{
         if len(t.ID) == 0 </span><span class="cov1" title="1">{
                 return errors.New("ID must not be empty")
         }</span>
 
-        <span class="cov8" title="4">if len(t.Title) == 0 </span><span class="cov1" title="1">{
+        <span class="cov8" title="3">if len(t.Title) == 0 </span><span class="cov1" title="1">{
                 return errors.New("title must not be empty")
         }</span>
 
-        <span class="cov7" title="3">return nil</span>
+        <span class="cov5" title="2">return nil</span>
 }
 </pre>
 		
