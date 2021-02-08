@@ -1,44 +1,43 @@
 package http
 
 import (
-    "net/http"
-    "fmt"
-    "context"
+	"context"
+	"fmt"
+	"net/http"
 
-    "github.com/task4233/tododemo/internal/db"
+	"github.com/task4233/todoapi-template/internal/db"
 )
 
 type Server struct {
-      server *http.Server
+	server *http.Server
 }
 
-func NewServer(port int, d db.DB) *Server{
-    mux := http.NewServeMux()
+func NewServer(port int, d db.DB) *Server {
+	mux := http.NewServeMux()
 
-    mux.Handle("/create", &createHandler{db: d})
-    mux.Handle("/list", &listHandler{db: d})
-    
-    return &Server {
-        server: &http.Server {
-            Addr: fmt.Sprintf(":%d", port),
-                Handler: mux,
-        },
-    }
+	mux.Handle("/create", &createHandler{db: d})
+	mux.Handle("/list", &listHandler{db: d})
+
+	return &Server{
+		server: &http.Server{
+			Addr:    fmt.Sprintf(":%d", port),
+			Handler: mux,
+		},
+	}
 }
 
 func (s *Server) Start() error {
-    if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-        return fmt.Errorf("failed to server: %w", err)   
-    }
+	if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		return fmt.Errorf("failed to server: %w", err)
+	}
 
-    return nil
+	return nil
 }
 
-
 func (s *Server) Stop(ctx context.Context) error {
-    if err := s.server.Shutdown(ctx); err != nil {
-        return fmt.Errorf("failed to shutdown: %w", err)
-    }
+	if err := s.server.Shutdown(ctx); err != nil {
+		return fmt.Errorf("failed to shutdown: %w", err)
+	}
 
-    return nil
+	return nil
 }

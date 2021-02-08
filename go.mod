@@ -1,4 +1,4 @@
-module github.com/task4233/tododemo
+module github.com/task4233/todoapi-template
 
 go 1.15
 
