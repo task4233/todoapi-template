@@ -19,10 +19,8 @@ test:
 	$(ENV_TEST) go test -covermode=atomic -count=1 ./...
 
 test-with-coverage:
-	rm -f coverage.out
 	$(ENV_TEST) go test -covermode=atomic -count=1 -coverprofile=coverage.out ./...
-	go tool cover -html=coverage.out -o ./cover.html
-	rm coverage.out
+	go tool cover -html=coverage.out -o ./.github/cover.html
 
 .PHONY: docker-build
 docker-build:
