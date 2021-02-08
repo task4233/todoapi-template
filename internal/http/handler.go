@@ -17,6 +17,7 @@ type createHandler struct {
 	db db.DB
 }
 
+// ServeHTTP is for createHandler, POST /create
 func (h *createHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var t todo.TODO
 	if err := json.NewDecoder(r.Body).Decode(&t); err != nil {

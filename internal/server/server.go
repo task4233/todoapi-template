@@ -32,6 +32,4 @@ func run(ctx context.Context) int {
 	case <-errCh:
 		return 1
 	}
-
-	return 0
 }
