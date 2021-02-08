@@ -4,12 +4,14 @@ import (
     "encoding/json"
     "net/http"
 
-    "github.com/google/go-cmp/cmp"
+    "github.com/google/uuid"
 
     "github.com/task4233/tododemo/internal/db"
+    "github.com/task4233/tododemo/internal/todo"
 )
 
 var _ http.Handler = (*createHandler)(nil)
+var _ http.Handler = (*listHandler)(nil)
 
 type createHandler struct {
     db db.DB
@@ -18,8 +20,8 @@ type createHandler struct {
 
 func (h *createHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     var t todo.TODO
-    if err := json.NewDecoder(r.Body).Decode(&todo); err != nil {
-        w.WriteHandler(http.StatusBadRequest)
+    if err := json.NewDecoder(r.Body).Decode(&t); err != nil {
+        w.WriteHeader(http.StatusBadRequest)
         return
     }
 
@@ -30,6 +32,23 @@ func (h *createHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
     }
 
     if err := json.NewEncoder(w).Encode(&t); err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+}
+
+type listHandler struct {
+    db db.DB
+}
+
+func (h *listHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    todos, err := h.db.GetAllTODOs(r.Context())
+    if err != nil {
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+
+    if json.NewEncoder(w).Encode(&todos); err != nil {
         w.WriteHeader(http.StatusInternalServerError)
         return
     }

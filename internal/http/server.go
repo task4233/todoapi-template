@@ -3,6 +3,7 @@ package http
 import (
     "net/http"
     "fmt"
+    "context"
 
     "github.com/task4233/tododemo/internal/db"
 )
@@ -13,6 +14,10 @@ type Server struct {
 
 func NewServer(port int, d db.DB) *Server{
     mux := http.NewServeMux()
+
+    mux.Handle("/create", &createHandler{db: d})
+    mux.Handle("/list", &listHandler{db: d})
+    
     return &Server {
         server: &http.Server {
             Addr: fmt.Sprintf(":%d", port),
@@ -22,7 +27,7 @@ func NewServer(port int, d db.DB) *Server{
 }
 
 func (s *Server) Start() error {
-    if s.server.ListenAndServer(); err != nil && err != http.ErrServerClosed {
+    if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
         return fmt.Errorf("failed to server: %w", err)   
     }
 
@@ -30,7 +35,7 @@ func (s *Server) Start() error {
 }
 
 
-func (s *Server Stop(ctx context.Context) error {
+func (s *Server) Stop(ctx context.Context) error {
     if err := s.server.Shutdown(ctx); err != nil {
         return fmt.Errorf("failed to shutdown: %w", err)
     }
