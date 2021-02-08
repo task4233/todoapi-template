@@ -102,6 +102,7 @@ type memoryDB struct {
         lock sync.RWMutex
 }
 
+// NewMemoryDB yields a pointer to DB instance
 func NewMemoryDB() DB <span class="cov1" title="1">{
         return &amp;memoryDB{db: map[string]*todo.TODO{}}
 }</span>
@@ -178,7 +179,7 @@ func (h *listHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) <span cl
                 return
         }</span>
 
-        <span class="cov0" title="0">if json.NewEncoder(w).Encode(&amp;todos); err != nil </span><span class="cov0" title="0">{
+        <span class="cov0" title="0">if err := json.NewEncoder(w).Encode(&amp;todos); err != nil </span><span class="cov0" title="0">{
                 w.WriteHeader(http.StatusInternalServerError)
                 return
         }</span>
@@ -195,10 +196,12 @@ import (
         "github.com/task4233/todoapi-template/internal/db"
 )
 
+// Server is a struct for *http.Server
 type Server struct {
         server *http.Server
 }
 
+// NewServer provides a pointer to Server instance
 func NewServer(port int, d db.DB) *Server <span class="cov0" title="0">{
         mux := http.NewServeMux()
 
@@ -213,6 +216,7 @@ func NewServer(port int, d db.DB) *Server <span class="cov0" title="0">{
         }
 }</span>
 
+// Start starts server
 func (s *Server) Start() error <span class="cov0" title="0">{
         if err := s.server.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed to server: %w", err)
@@ -221,6 +225,7 @@ func (s *Server) Start() error <span class="cov0" title="0">{
         <span class="cov0" title="0">return nil</span>
 }
 
+// Stop stops server
 func (s *Server) Stop(ctx context.Context) error <span class="cov0" title="0">{
         if err := s.server.Shutdown(ctx); err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("failed to shutdown: %w", err)
@@ -242,6 +247,7 @@ import (
         "github.com/task4233/todoapi-template/internal/http"
 )
 
+// Run runs server with context
 func Run() <span class="cov0" title="0">{
         os.Exit(run(context.Background()))
 }</span>
