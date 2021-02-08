@@ -14,6 +14,7 @@ type memoryDB struct {
 	lock sync.RWMutex
 }
 
+// NewMemoryDB yields a pointer to DB instance
 func NewMemoryDB() DB {
 	return &memoryDB{db: map[string]*todo.TODO{}}
 }

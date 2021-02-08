@@ -10,6 +10,7 @@ import (
 	"github.com/task4233/todoapi-template/internal/http"
 )
 
+// Run runs server with context
 func Run() {
 	os.Exit(run(context.Background()))
 }

@@ -8,10 +8,12 @@ import (
 	"github.com/task4233/todoapi-template/internal/db"
 )
 
+// Server is a struct for *http.Server
 type Server struct {
 	server *http.Server
 }
 
+// NewServer provides a pointer to Server instance
 func NewServer(port int, d db.DB) *Server {
 	mux := http.NewServeMux()
 
@@ -26,6 +28,7 @@ func NewServer(port int, d db.DB) *Server {
 	}
 }
 
+// Start starts server
 func (s *Server) Start() error {
 	if err := s.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return fmt.Errorf("failed to server: %w", err)
@@ -34,6 +37,7 @@ func (s *Server) Start() error {
 	return nil
 }
 
+// Stop stops server
 func (s *Server) Stop(ctx context.Context) error {
 	if err := s.server.Shutdown(ctx); err != nil {
 		return fmt.Errorf("failed to shutdown: %w", err)
