@@ -48,7 +48,7 @@ func (h *listHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if json.NewEncoder(w).Encode(&todos); err != nil {
+	if err := json.NewEncoder(w).Encode(&todos); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
