@@ -1,7 +1,6 @@
 package http_test
 
 import (
-	ht "net/http"
 	"testing"
 
 	"github.com/task4233/todoapi-template/internal/db"
@@ -11,7 +10,6 @@ import (
 type TestNeServer struct {
 	port int
 	d    db.DB
-	want *ht.Server
 }
 
 func TestNewServer(t *testing.T) {
