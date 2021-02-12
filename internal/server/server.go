@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/task4233/todoapi-template/internal/db"
 	"github.com/task4233/todoapi-template/internal/http"
@@ -28,6 +29,8 @@ func run(ctx context.Context) int {
 	}()
 
 	select {
+	case <-time.After(time.Duration(1) * time.Second):
+		return 0
 	case <-termCh:
 		return 0
 	case <-errCh:
