@@ -6,6 +6,21 @@
 Web Api Template based on [Merpay Youtube live](https://www.youtube.com/watch?v=cWvAhmfZJZg).
 Tests, Makefile, GitHub Actions are original.
 
+## QuickStart
+```
+$ make run
+./server
+$ curl -X POST -d `jo title=test` localhost:8080/create
+{"id":"aef968c6-ad30-45b0-aa1c-3b73eef48977","title":"test"}
+$ curl localhost:8080/list | jq
+[
+  {
+    "id": "aef968c6-ad30-45b0-aa1c-3b73eef48977",
+    "title": "test"
+  }
+]
+```
+
 ## Structure
 ```
 .
