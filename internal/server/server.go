@@ -34,8 +34,10 @@ func run(ctx context.Context) int {
 			return 0
 		}
 	case <-termCh:
+		s.Stop(ctx)
 		return 0
 	case <-errCh:
+		s.Stop(ctx)
 		return 1
 	}
 	return 0
