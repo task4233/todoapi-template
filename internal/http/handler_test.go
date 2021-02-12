@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
+	"unsafe"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/task4233/todoapi-template/internal/db"
@@ -29,6 +31,21 @@ func (f failDB) GetAllTODOs(ctx context.Context) (*todo.TODOs, error) {
 	return nil, errors.New("fails intentionally")
 }
 
+type failedDecodeDB struct{}
+
+func NewFailedDecodeDB() db.DB {
+	return &failedDecodeDB{}
+}
+
+func (f failedDecodeDB) PutTODO(ctx context.Context, t *todo.TODO) error {
+	t.TS = (*time.Time)(unsafe.Pointer(nil))
+	return errors.New("fails intentionally")
+}
+
+func (f failedDecodeDB) GetAllTODOs(ctx context.Context) (*todo.TODOs, error) {
+	return nil, errors.New("fails intentionally")
+}
+
 type testStructPutTODO struct {
 	db        db.DB
 	reqBody   []byte
@@ -46,6 +63,7 @@ func TestCreateHandler(t *testing.T) {
 
 	db := db.NewMemoryDB()
 	failDB := NewFailDB()
+	failedDecodeDB := NewFailedDecodeDB()
 
 	cases := map[string]testStructPutTODO{
 		"normal": {
@@ -64,6 +82,12 @@ func TestCreateHandler(t *testing.T) {
 			reqBody:   reqBody,
 			db:        failDB,
 			wantTitle: "",
+			wantCode:  http.StatusInternalServerError,
+		},
+		"failed Decode": {
+			reqBody:   reqBody,
+			db:        failedDecodeDB,
+			wantTitle: title,
 			wantCode:  http.StatusInternalServerError,
 		},
 	}
@@ -171,7 +195,3 @@ func TestGetAllHandler(t *testing.T) {
 		})
 	}
 }
-
-// TODO:
-// - Start
-// - Stop
