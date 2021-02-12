@@ -120,7 +120,9 @@ func TestGetAllHandler(t *testing.T) {
 		t.Fatalf("failed to NewTODO: %s", err.Error())
 	}
 
-	db.PutTODO(ctx, td)
+	if err := db.PutTODO(ctx, td); err != nil {
+		t.Fatalf("failed to PutTODO: %s", err.Error())
+	}
 	failDB := NewFailDB()
 
 	cases := map[string]TestStructGetAllTODOs{
