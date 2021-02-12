@@ -173,7 +173,5 @@ func TestGetAllHandler(t *testing.T) {
 }
 
 // TODO:
-// - testListHandler
-// - NewServer
 // - Start
 // - Stop

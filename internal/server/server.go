@@ -29,11 +29,14 @@ func run(ctx context.Context) int {
 	}()
 
 	select {
-	case <-time.After(time.Duration(1) * time.Second):
-		return 0
+	case <-time.After(time.Duration(1)):
+		if os.Getenv("DEV") == "test" {
+			return 0
+		}
 	case <-termCh:
 		return 0
 	case <-errCh:
 		return 1
 	}
+	return 0
 }
