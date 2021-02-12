@@ -10,6 +10,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/task4233/todoapi-template/internal/db"
 	"github.com/task4233/todoapi-template/internal/todo"
 )
@@ -108,7 +109,7 @@ type CreateResponse struct {
 
 type TestStructGetAllTODOs struct {
 	db       db.DB
-	want     []todo.TODO
+	want     *todo.TODOs
 	wantCode int
 }
 
@@ -119,7 +120,8 @@ func TestGetAllHandler(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to NewTODO: %s", err.Error())
 	}
-
+	todos := &todo.TODOs{}
+	todos.Todos = append(todos.Todos, td)
 	if err := db.PutTODO(ctx, td); err != nil {
 		t.Fatalf("failed to PutTODO: %s", err.Error())
 	}
@@ -128,7 +130,7 @@ func TestGetAllHandler(t *testing.T) {
 	cases := map[string]TestStructGetAllTODOs{
 		"normal": {
 			db:       db,
-			want:     []todo.TODO{},
+			want:     todos,
 			wantCode: http.StatusOK,
 		},
 		"failed PutGetAllTODOs": {
@@ -158,16 +160,16 @@ func TestGetAllHandler(t *testing.T) {
 			}
 
 			log.Println("body:", got.Body)
-			var resp GetAllResponse
+			var resp todo.TODOs
 			if err := json.NewDecoder(got.Body).Decode(&resp); err != nil {
 				t.Fatalf("failed to decode: %s", err.Error())
 			}
+
+			if diff := cmp.Diff(tt.want, &resp); diff != "" {
+				t.Errorf("\n(-expected, +actual)\n%s", diff)
+			}
 		})
 	}
-}
-
-type GetAllResponse struct {
-	Todos []CreateResponse `json:"todos"`
 }
 
 // TODO:
