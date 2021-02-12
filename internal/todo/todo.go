@@ -6,7 +6,12 @@ import (
 	"github.com/google/uuid"
 )
 
-// TODO mangages information  for todo
+// TODOs manages an array for todo
+type TODOs struct {
+	Todos []*TODO `json:"todos"`
+}
+
+// TODO mangages information for todo
 type TODO struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
@@ -34,6 +39,5 @@ func (t TODO) IsValid() error {
 	if len(t.Title) == 0 {
 		return errors.New("title must not be empty")
 	}
-
 	return nil
 }

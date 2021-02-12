@@ -19,18 +19,19 @@ func NewMemoryDB() DB {
 	return &memoryDB{db: map[string]*todo.TODO{}}
 }
 
-func (m *memoryDB) GetAllTODOs(ctx context.Context) ([]*todo.TODO, error) {
+func (m *memoryDB) GetAllTODOs(ctx context.Context) (*todo.TODOs, error) {
 	m.lock.Lock()
 
-	result := make([]*todo.TODO, len(m.db))
+	var result todo.TODOs
+	result.Todos = make([]*todo.TODO, len(m.db))
 	i := 0
 	for _, t := range m.db {
-		result[i] = t
+		result.Todos[i] = t
 		i++
 	}
 
 	m.lock.Unlock()
-	return result, nil
+	return &result, nil
 }
 
 func (m *memoryDB) PutTODO(ctx context.Context, t *todo.TODO) error {

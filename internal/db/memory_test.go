@@ -55,11 +55,11 @@ func TestMemoryDBGetAllTODOs(t *testing.T) {
 
 	cases := map[string]struct {
 		todo *todo.TODO
-		want []*todo.TODO
+		want *todo.TODOs
 	}{
 		"put": {
 			todo: todo1,
-			want: []*todo.TODO{todo1},
+			want: &todo.TODOs{Todos: []*todo.TODO{todo1}},
 		},
 	}
 
